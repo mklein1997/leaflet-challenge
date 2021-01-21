@@ -7,17 +7,15 @@ d3.json(queryUrl, function(data) {
     createFeatures(data.features);
 });
 
-
-// Create function that will place features on map
 function createFeatures(earthquakeData) {
-    function onEach(feature, layer) {
-        layer.bindPopup("<h3>" + feature.properties.place + "</h3><hr><p>"
-        + new Date(feature.properties.time) + "<hr>" + feature.properties.mag + 
-        "</p>");
+    function onEachFeature(feature, layer) {
+        layer.bindPopup("<h3>" + "Location: " + feature.properties.place + "</h3><hr><p>" + "Date: "
+        + new Date(feature.properties.time) + "<hr>" + "Magnitude: " + feature.properties.mag + 
+        "<hr>" + "Depth: " + feature.geometry.coordinates[2] + "</p>");
     }
 
     var earthquakes = L.geoJSON(earthquakeData, {
-        onEach: onEach
+        onEachFeature: onEachFeature
     });
     createMap(earthquakes);
 }
@@ -46,9 +44,11 @@ function createMap(earthquakes) {
         center: [
             45.52, -95.07
             ],
-        zoom: 5,   
+        zoom: 3,   
         layers: [streetmap, earthquakes]
     });
+
+    
 
     //Create layer control and add layers to map
     L.control.layers(baseMaps, overlayMaps, {
@@ -74,4 +74,6 @@ function createMap(earthquakes) {
           blur: 35
         }).addTo(myMap);
     });
+
+    
 }
