@@ -42,10 +42,12 @@ function createMap(earthquakes) {
     };
 
     // Create initial map object
-    var myMap = L.map("mapid", {
-    center: [45.52, -95.07],
-    zoom: 5,   
-    layers: [streetmap, earthquakes]
+    var myMap = L.map("map", {
+        center: [
+            45.52, -95.07
+            ],
+        zoom: 5,   
+        layers: [streetmap, earthquakes]
     });
 
     //Create layer control and add layers to map
@@ -53,4 +55,23 @@ function createMap(earthquakes) {
         collapsed: false
     }).addTo(myMap);
 
+    d3.json(queryUrl, function(response) {
+
+        console.log(response);
+      
+        var heatArray = [];
+      
+        for (var i = 0; i < response.length; i++) {
+          var location = response[i].features.geometry;
+      
+          if (location) {
+            heatArray.push([location.coordinates[1], location.coordinates[0]]);
+          }
+        }
+      
+        var heat = L.heatLayer(heatArray, {
+          radius: 20,
+          blur: 35
+        }).addTo(myMap);
+    });
 }
